@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="search-box" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger" id="search-btn">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city"></h1>
+            <h3 id="temp"><span></span>&deg;C</h3>
+            <p id="date"></p>
+            <h1 class="lead" id="weather-type"></h1>
+        </div>
+    </div>
+
+
+    <script>
+        //load data and key
+        const weatherApp = {
+            key :'2c119dd7380e87056ed7539001e65cd7',
+            base:'https://api.openweathermap.org/data/2.5/weather'
+            // https://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=YOUR_API_KEY
+        }
+        //addEventListener for click
+        document.getElementById('search-btn').addEventListener('click', () =>{ 
+            const weatherStatus = document.getElementById('search-box').value; 
+            //  document.getElementById('setCity').innerHTML = weather;
+
+              
+            weatherApi(weatherStatus);
+        })
+        //weather report 
+        function weatherApi (city){
+            // fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+            fetch(`${weatherApp.base}?q=${city}&appid=${weatherApp.key}&units=metric`)
+            .then (checkWeather =>{
+            return checkWeather.json();
+            }).then(weatherShow);  
+        }
+
+        //show weather report
+        function weatherShow(checkWeather){
+            console.log(checkWeather);
+           let setCity =  document.getElementById('city');
+           setCity.innerHTML=`${checkWeather.name} ${checkWeather.sys.country}`
+
+           let setDegree =  document.getElementById('temp');
+           setDegree.innerHTML=`${checkWeather.main.temp}<span>°c<span>`
+
+           let weatherName =  document.getElementById('weather-type');
+           weatherName.innerHTML=`${checkWeather.weather[0].main}` 
+
+           let date = document.getElementById('date');
+            let get = new Date();
+            date.innerHTML = getDateFunction(get);  
+    }
+
+
+    function getDateFunction(d){
+    let months = ["January", "Fabruary", "March", "April", "May", "June", "July", "August", "September", "October", "Nabember", "December"];
+    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sturday"];
+
+    let day = days[d.getDay()];
+    let date = d.getDate();
+    let month = months[d.getMonth()];
+    let year = d.getFullYear();
+
+    return `${day} ${date} ${month} ${year}`;
+}
+    </script>
+</body>
+
+</html>
